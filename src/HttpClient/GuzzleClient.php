@@ -205,7 +205,7 @@ class GuzzleClient implements ClientInterface, LoggerAwareInterface
      *
      * @param LoggerInterface|null $logger
      */
-    public function setLogger(LoggerInterface $logger = null): void
+    public function setLogger(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
