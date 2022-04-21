@@ -1,4 +1,7 @@
 <?php
+
+namespace TxTech\Express\Traits;
+
 /**
  * User : Zelin Ning(NiZerin)
  * Date : 2022/4/21

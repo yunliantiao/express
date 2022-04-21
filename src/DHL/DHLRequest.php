@@ -5,7 +5,7 @@ namespace TxTech\Express\DHL;
 use GuzzleHttp\Psr7\Request;
 use TxTech\Express\HttpClient\Exception\HttpClientException;
 use TxTech\Express\HttpClient\GuzzleClient;
-use QueueTrait;
+use TxTech\Express\Traits\QueueTrait;
 
 /**
  * Class DHLRequest
