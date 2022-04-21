@@ -14,7 +14,6 @@
         "php": ">=7.0",
         "ext-json": "*",
         "psr/log": "^2.0",
-        "league/flysystem": "^1.0",
         "guzzlehttp/guzzle": ">=7.0.0"
     },
     "autoload": {
