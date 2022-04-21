@@ -4,11 +4,8 @@ namespace TxTech\Express\HttpClient;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\TransferException;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\MessageFormatter;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use TxTech\Express\HttpClient\Exception\HttpClientException;
@@ -45,8 +42,6 @@ class GuzzleClient implements ClientInterface, LoggerAwareInterface
     /** @var Client $client */
     private $client;
 
-    private $isUsedPhpBuild = false;
-
     /**
      * Get the Guzzle client
      *
@@ -64,7 +59,6 @@ class GuzzleClient implements ClientInterface, LoggerAwareInterface
                     'connect_timeout' => $this->connectTimeout,
                     'http_errors' => false,
                     'verify' => false,
-                    'handler' => $this->getStack(),
                     'debug' => false
                 ]
             ));
@@ -276,58 +270,6 @@ class GuzzleClient implements ClientInterface, LoggerAwareInterface
         return $response;
     }
 
-
-    /**
-     * 增加日子中间件
-     */
-    public function getStack()
-    {
-        $stack = HandlerStack::create(\GuzzleHttp\choose_handler());
-        $formatter = new MessageFormatter("{uri} {request} - {response} \n ------------------- \n");
-        $stack->push(Middleware::log($this->logger, $formatter));
-        // $stack->push(Middleware::retry(function (
-        //     $retries,
-        //     Request $request,
-        //     Response $response = null,
-        //     RequestException $exception = null
-        // ) {
-        //     // Limit the number of retries to 5
-        //     if ($retries >= 5) {
-        //         return false;
-        //     }
-
-        //     // Retry connection exceptions
-        //     if ($exception instanceof ConnectException) {
-        //         return true;
-        //     }
-
-        //     if ($response) {
-        //         // Retry on server errors
-        //         // 如果是HTTP STATUS =500 就会重试， ERP不需要
-        //         // if ($response->getStatusCode() >= 500) {
-        //         //     return true;
-        //         // }
-        //     }
-
-        //     return false;
-        // }, function ($retries) {
-        //     return $retries * 1000;
-        // }));
-
-        return $stack;
-    }
-
-    public function setUsedPhpBuild($v)
-    {
-        $this->isUsedPhpBuild = $v;
-        return $this;
-    }
-
-    public function getUsedPhpBuild()
-    {
-        return $this->isUsedPhpBuild;
-    }
-
     /**
      * http request
      */
@@ -352,11 +294,7 @@ class GuzzleClient implements ClientInterface, LoggerAwareInterface
                 $body = $body['form_params'];
             }
 
-            if ($this->getUsedPhpBuild()) {
-                $body = http_build_query($body, '', '&');
-            } else {
-                $body = Query::build($body);
-            }
+            $body = Query::build($body);
         }
 
         $request = new Request(
