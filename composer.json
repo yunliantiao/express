@@ -1,6 +1,6 @@
 {
     "name": "txtech/express",
-    "type": "project",
+    "type": "library",
     "description": "DHL Fedex TNT 对接",
     "keywords": ["dhl", "tnt", "fedex"],
     "license": "MIT",
