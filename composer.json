@@ -1,0 +1,24 @@
+{
+    "name": "txtech/express",
+    "authors": [
+        {
+            "name": "NiZerin",
+            "email": "i@nizer.in"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "guzzlehttp/guzzle": ">=7.0.0",
+        "vlucas/phpdotenv": "^2.0",
+        "psr/log": "^3.0",
+        "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "TxTech\\Express\\": "src/"
+        },
+        "files": [
+            "src/file/helper.php"
+        ]
+    }
+}
