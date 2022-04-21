@@ -13,7 +13,6 @@
     "require": {
         "php": ">=7.0",
         "guzzlehttp/guzzle": ">=7.0.0",
-        "vlucas/phpdotenv": "^2.0",
         "psr/log": "^3.0",
         "ext-json": "*"
     },
