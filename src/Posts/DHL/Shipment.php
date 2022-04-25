@@ -1,28 +1,42 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:55
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: Shipment.php
+ */
 
-namespace TxTech\Express\DHL;
 
-use TxTech\Express\DHL\Shipment\InternationalDetail;
+namespace Txtech\Express\Posts\DHL;
 
+
+use Txtech\Express\Posts\DHL\Shipment\InternationalDetail;
+
+/**
+ * Class Shipment
+ * @package Txtech\Express\Posts\DHL
+ */
 class Shipment
 {
-    protected $shipmentInfo;
+    /** @var mixed  */
+    protected mixed $shipmentInfo;
 
-    /**
-     * @var string
-     */
-    protected $shipTimestamp;
+    /** @var string  */
+    protected string $shipTimestamp;
 
-    /**
-     * @var string
-     */
-    protected $paymentInfo = 'DAP';
+    /** @var string  */
+    protected string $paymentInfo = 'DAP';
 
+    /** @var  */
     protected $internationalDetail;
 
-    protected $ship;
+    /** @var mixed  */
+    protected mixed $ship;
 
-    protected $packages;
+    /** @var mixed  */
+    protected mixed $packages;
 
     /**
      * @return mixed
@@ -85,6 +99,9 @@ class Shipment
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     protected function getInternationalDetail()
     {
         return $this->internationalDetail;

@@ -1,9 +1,23 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:48
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: Ship.php
+ */
 
-namespace TxTech\Express\DHL\Common;
 
-use TxTech\Express\DHL\Arrayable;
+namespace Txtech\Express\Posts\DHL\Common;
 
+
+use Txtech\Express\Core\Arrayable;
+
+/**
+ * Class Ship
+ * @package Txtech\Express\Posts\DHL\Common
+ */
 class Ship implements ArrayAble
 {
     /**
@@ -78,6 +92,9 @@ class Ship implements ArrayAble
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function map()
     {
         $data = [

@@ -1,9 +1,23 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:43
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: Package.php
+ */
 
-namespace TxTech\Express\DHL\Common;
 
-use TxTech\Express\DHL\Arrayable;
+namespace Txtech\Express\Posts\DHL\Common;
 
+
+use Txtech\Express\Core\Arrayable;
+
+/**
+ * Class Package
+ * @package Txtech\Express\Posts\DHL\Common
+ */
 class Package implements Arrayable
 {
     /**

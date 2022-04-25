@@ -1,9 +1,25 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:31
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: Recipient.php
+ */
 
-namespace TxTech\Express\DHL\Common;
 
+namespace Txtech\Express\Posts\DHL\Common;
+
+/**
+ * Class Recipient
+ * @package Txtech\Express\Posts\DHL\Common
+ */
 class Recipient extends Shipper
 {
+    /**
+     * @return array[]
+     */
     public function toArray()
     {
         $data = [

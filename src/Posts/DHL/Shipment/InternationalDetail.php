@@ -1,35 +1,54 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:19
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: InternationalDetail.php
+ */
 
-namespace TxTech\Express\DHL\Shipment;
 
-use TxTech\Express\DHL\Arrayable;
+namespace Txtech\Express\Posts\DHL\Shipment;
 
+
+use Txtech\Express\Core\Arrayable;
+
+/**
+ * Class InternationalDetail
+ * @package Txtech\Express\Posts\DHL\Shipment
+ */
 class InternationalDetail implements ArrayAble
 {
-    const DOCUMENTS = 'DOCUMENTS';
+    /** @var string */
+    public const DOCUMENTS = 'DOCUMENTS';
 
-    const NON_DOCUMENTS = 'NON_DOCUMENTS';
+    /** @var string */
+    public const NON_DOCUMENTS = 'NON_DOCUMENTS';
 
+    /** @var */
     protected $Description;
 
+    /** @var */
     protected $customsValue;
 
     protected $content = 'NON_DOCUMENTS';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $invoiceDate = '';
 
+    /** @var string */
     protected $invoiceNumber = '';
 
+    /** @var array */
     protected $exportLineItems = [];
 
+    /** @var bool */
     protected $requestInvoice = false;
 
     /**
      * @param array $items
-     * @return $this
+     * @return InternationalDetail
      */
     public function withInvoice(array $items)
     {
@@ -174,6 +193,9 @@ class InternationalDetail implements ArrayAble
         return $this;
     }
 
+    /**
+     * @return array
+     */
     protected function map()
     {
         return [
@@ -192,6 +214,9 @@ class InternationalDetail implements ArrayAble
         ];
     }
 
+    /**
+     * @return array
+     */
     protected function mapWithoutInvoice()
     {
         return [
@@ -203,6 +228,9 @@ class InternationalDetail implements ArrayAble
         ];
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         if ($this->requestInvoice) {

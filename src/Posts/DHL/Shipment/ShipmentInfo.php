@@ -1,58 +1,76 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 14:51
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: ShipmentInfo.php
+ */
 
-namespace TxTech\Express\DHL\Shipment;
 
-use TxTech\Express\DHL\Arrayable;
+namespace Txtech\Express\Posts\DHL\Shipment;
 
-class ShipmentInfo implements ArrayAble
+
+use Txtech\Express\Core\Arrayable;
+
+/**
+ * Class ShipmentInfo
+ * @package Txtech\Express\Posts\DHL\Shipment
+ */
+class ShipmentInfo implements Arrayable
 {
+    /** @var string */
     const SERVICE_TYPE_IT = 'N';
 
+    /** @var string */
     const SERVICE_TYPE_OTHER = 'P';
 
+    /** @var string */
     const SERVICE_TYPE_EU = 'U';
 
+    /** @var string */
     const SERVICE_TYPE_OTHER_DOC = 'D';
 
-    protected $DropOffType = 'REGULAR_PICKUP';
+    /** @var string */
+    protected string $dropOffType = 'REGULAR_PICKUP';
 
-    protected $serviceType = 'P';
+    /** @var string */
+    protected string $serviceType = 'P';
 
-    protected $account;
+    /** @var mixed  */
+    protected mixed $account;
 
-    protected $currency = 'EUR';
+    /** @var string */
+    protected string $currency = 'EUR';
 
-    protected $unitOfMeasurement = 'SI';
+    /** @var string */
+    protected string $unitOfMeasurement = 'SI';
 
-    protected $labelType = 'PDF';
+    /** @var string */
+    protected string $labelType = 'PDF';
 
-    protected $customsInvoiceTemplate = 'COMMERCIAL_INVOICE_03';
+    /** @var string */
+    protected string $customsInvoiceTemplate = 'COMMERCIAL_INVOICE_03';
 
-    protected $labelOptions = [];
+    /** @var array */
+    protected array $labelOptions = [];
 
-    /**
-     * @var float
-     */
-    protected $insuranceValue;
+    /** @var float */
+    protected float $insuranceValue;
 
     /**
      * @var bool
      */
     protected $withCustomsInvoice = false;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $withInsurance = false;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $withDocumentInsurance = false;
 
-    /**
-     * @return float
-     */
+    /**  */
     public function getInsuranceValue(): float
     {
         return $this->insuranceValue;
@@ -94,16 +112,16 @@ class ShipmentInfo implements ArrayAble
      */
     public function getDropOffType(): string
     {
-        return $this->DropOffType;
+        return $this->dropOffType;
     }
 
     /**
-     * @param string $DropOffType
+     * @param string $dropOffType
      * @return ShipmentInfo
      */
-    public function setDropOffType(string $DropOffType): ShipmentInfo
+    public function setDropOffType(string $dropOffType): ShipmentInfo
     {
-        $this->DropOffType = $DropOffType;
+        $this->dropOffType = $dropOffType;
 
         return $this;
     }
@@ -241,6 +259,9 @@ class ShipmentInfo implements ArrayAble
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function withCustomsInvoice()
     {
         $this->withCustomsInvoice = true;
@@ -269,6 +290,9 @@ class ShipmentInfo implements ArrayAble
         ];
     }
 
+    /**
+     * @return array
+     */
     public function mapWithInvoice()
     {
         return [
@@ -290,6 +314,9 @@ class ShipmentInfo implements ArrayAble
         ];
     }
 
+    /**
+     * @return array|\array[][][]
+     */
     public function toArray()
     {
         $data = $this->map();

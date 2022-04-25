@@ -1,23 +1,44 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:51
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: ExportLineItem.php
+ */
 
-namespace TxTech\Express\DHL\Shipment;
 
+namespace Txtech\Express\Posts\DHL\Shipment;
 
-class ExportLineItem
+use Txtech\Express\Core\Arrayable;
+
+/**
+ * Class ExportLineItem
+ * @package Txtech\Express\Posts\DHL\Shipment
+ */
+class ExportLineItem implements Arrayable
 {
-    protected $itemNumber;
+    /** @var mixed  */
+    protected mixed $itemNumber;
 
-    protected $quantity;
+    /** @var mixed  */
+    protected mixed $quantity;
 
-    protected $quantityUnitOfMeasurement;
+    /** @var mixed  */
+    protected mixed $quantityUnitOfMeasurement;
 
-    protected $itemDescription;
+    /** @var mixed  */
+    protected mixed $itemDescription;
 
-    protected $unitPrice;
+    /** @var mixed  */
+    protected mixed $unitPrice;
 
-    protected $netWeight;
+    /** @var mixed  */
+    protected mixed $netWeight;
 
-    protected $grossWeight;
+    /** @var mixed  */
+    protected mixed $grossWeight;
 
     /**
      * @return mixed
@@ -152,6 +173,9 @@ class ExportLineItem
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function map()
     {
         return [
@@ -165,6 +189,9 @@ class ExportLineItem
         ];
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         return $this->map();

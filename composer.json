@@ -11,17 +11,24 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
-        "ext-json": "*",
-        "psr/log": "^2.0",
-        "guzzlehttp/guzzle": ">=7.0.0"
+        "php": ">=8.0",
+        "ext-mbstring": "*",
+        "guzzlehttp/guzzle": "^6.0 || ^7.0",
+        "monolog/monolog": "^2.5",
+        "overtrue/pinyin": "~4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0 || ^9.0"
     },
     "autoload": {
         "psr-4": {
-            "TxTech\\Express\\": "src/"
+            "Txtech\\Express\\": "src/"
         },
         "files": [
-            "src/file/helper.php"
+            "src/helper.php"
         ]
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit tests"
     }
 }

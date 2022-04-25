@@ -1,28 +1,63 @@
 <?php
+/**
+ * User : Zelin Ning(NiZerin)
+ * Date : 2022/4/25
+ * Time : 15:31
+ * Email: i@nizer.in
+ * Site : nizer.in
+ * FileName: Shipper.php
+ */
 
-namespace TxTech\Express\DHL\Common;
 
-use TxTech\Express\DHL\Arrayable;
+namespace Txtech\Express\Posts\DHL\Common;
 
+
+use Txtech\Express\Core\Arrayable;
+
+/**
+ * Class Shipper
+ * @package Txtech\Express\Posts\DHL\Common
+ */
 class Shipper implements ArrayAble
 {
-    protected $name;
+    /** @var mixed */
+    protected mixed $name;
 
-    protected $companyName;
+    /** @var mixed */
+    protected mixed $companyName;
 
-    protected $phoneNumber;
+    /** @var mixed */
+    protected mixed $phoneNumber;
 
-    protected $email = '';
+    /** @var string */
+    protected string $email = '';
 
-    protected $street;
+    /** @var mixed */
+    protected mixed $street = '';
 
-    protected $street2;
+    /** @var mixed */
+    protected mixed $street2 = '';
 
-    protected $street3;
+    /** @var mixed */
+    protected mixed $street3 = '';
 
-    protected $numberTypeCode = 'VAT';
+    /** @var string */
+    protected string $numberTypeCode = 'VAT';
 
-    protected $RegistrationNumber;
+    /** @var mixed */
+    protected mixed $registrationNumber;
+
+    /** @var mixed */
+    protected mixed $city;
+
+    /** @var mixed */
+    protected mixed $postCode;
+
+    /** @var mixed */
+    protected mixed $countryCode;
+
+    /** @var string */
+    protected string $stateOrProvinceCode = '';
 
     /**
      * @return mixed
@@ -48,16 +83,16 @@ class Shipper implements ArrayAble
      */
     public function getRegistrationNumber()
     {
-        return $this->RegistrationNumber;
+        return $this->registrationNumber;
     }
 
     /**
-     * @param mixed $RegistrationNumber
+     * @param mixed $registrationNumber
      * @return Shipper
      */
-    public function setRegistrationNumber($RegistrationNumber)
+    public function setRegistrationNumber($registrationNumber)
     {
-        $this->RegistrationNumber = $RegistrationNumber;
+        $this->registrationNumber = $registrationNumber;
 
         return $this;
     }
@@ -99,14 +134,6 @@ class Shipper implements ArrayAble
 
         return $this;
     }
-
-    protected $city;
-
-    protected $postCode;
-
-    protected $countryCode;
-
-    protected $StateOrProvinceCode = '';
 
     /**
      * @return mixed
@@ -265,20 +292,23 @@ class Shipper implements ArrayAble
      */
     public function getStateOrProvinceCode()
     {
-        return $this->StateOrProvinceCode;
+        return $this->stateOrProvinceCode;
     }
 
     /**
-     * @param string $StateOrProvinceCode
+     * @param string $stateOrProvinceCode
      * @return Shipper
      */
-    public function setStateOrProvinceCode(string $StateOrProvinceCode)
+    public function setStateOrProvinceCode(string $stateOrProvinceCode)
     {
-        $this->StateOrProvinceCode = $StateOrProvinceCode;
+        $this->stateOrProvinceCode = $stateOrProvinceCode;
 
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function toArray()
     {
         $data = [
