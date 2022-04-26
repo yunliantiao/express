@@ -76,7 +76,7 @@ class DHLExpress extends Post
     {
         Logger::printScreen(LogLevel::INFO, 'DHL面单对接原始数据', $data);
 
-        $data['package_info'] = json_decode($data['package_info'], true);
+        $data['boxes'] = json_decode($data['boxes'], true);
 
         $this->setPackageId($data['parcel_id']);
         $this->setCreated(date('Y-m-d', strtotime($data['created_at'])));
@@ -84,24 +84,23 @@ class DHLExpress extends Post
         $shipmentInfo = (new ShipmentInfo())->setAccount($this->accountCode);
         $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_OTHER);
 
-        $arr = [1 => 'Documents', 2 => 'Goods', 3 => 'Gift', 4 => 'Clothes', 5 => 'Cosmeceuticals', 6 => 'Red wine', 7 => 'Food', 100 => 'Goods'];
-        $documentContent = $arr[$data['package_content']];
+        $cargoType = $data['cargo_type'];
 
         $details = (new InternationalDetail())
-            ->setDescription($documentContent)
+            ->setDescription($cargoType)
             ->setCustomsValue($data['total_value']);
 
         //如果设置了保险，加上保险服务
         if ($data['is_enabled_insurance']) {
             //文件类型保险
-            if ($documentContent == 'Documents') {
+            if ($cargoType == 'Documents') {
                 $shipmentInfo->withDocumentInsurance()->setInsuranceValue($data['insurance_cost']);
             } else { //非文件类型
                 $shipmentInfo->withInsurance()->setInsuranceValue($data['insurance_cost']);
             }
         }
 
-        if ($documentContent == 'Documents') {
+        if ($cargoType == 'Documents') {
             $details->setContentDocuments();
             //如果寄往欧盟国家，更改服务类型为欧盟
             // if ($this->isEUCountry($data['country_code'])) {
@@ -155,67 +154,43 @@ class DHLExpress extends Post
 
         $packages = new Packages();
 
-        if ($data['package_info']) {
-            foreach ($data['package_info'] as $key => $value) {
-
+        if ($data['boxes']) {
+            foreach ($data['boxes'] as $box) {
                 $dimension = new Dimensions();
+                $dimension->setHeight($box['height'])
+                    ->setLength($box['length'])
+                    ->setWidth($box['width']);
 
-                $dimension->setHeight($value['height_size']) //use mm
-                ->setLength($value['length_size'])
-                    ->setWidth($value['width_size']);
-
-                $package = $this->setPackage($dimension, $value, $data["vip_id"], $data['file_declaration'] == "" ? $documentContent : $data['file_declaration']);
-
+                $package = $this->setPackage($dimension, $box, $data['vip_id'], $box['description'] == '' ? $cargoType : $data['description']);
                 $packages->add($package);
             }
         }
 
         $ship = new Ship();
 
-        $customs_value = empty($data['total_value']) ? 0 : $data['total_value'];
         //如果是发国际件,非欧洲外
         if (!$this->isEUCountry($recipient->getCountryCode())) {
             $exportLineItems = [];
 
-            //如果发的是文件
-            if ($data['package_content'] == 1) {
-
+            foreach ($data['declares'] as $declare) {
                 $exportItem = new ExportLineItem();
-
-                $exportItem->setItemNumber(1)
-                    ->setUnitPrice($customs_value)
-                    ->setItemDescription($data['file_declaration'])
-                    ->setQuantityUnitOfMeasurement("KG") //$item['unit']
-                    ->setGrossWeight(number_format(ceil($data['total_weight_with_box'] / 1000), 2))
-                    ->setNetWeight(number_format(ceil($data['total_weight_with_box'] / 1000), 2))
-                    ->setQuantity(1);
-
-                $exportLineItems[] = $exportItem->toArray();
-
-            } else {
-                foreach ($data['items'] as $item) {
-                    $exportItem = new ExportLineItem();
-
-                    $exportItem->setItemNumber($item['order_item_id'])
-                        ->setUnitPrice($item['unit_price'])
-                        ->setItemDescription($item['item_en_name'] ?? $item['description'])
-                        ->setQuantityUnitOfMeasurement("KG") //$item['unit']
-                        ->setGrossWeight(number_format(ceil($item['total_weight'] / 1000), 2))
-                        ->setNetWeight(number_format(ceil($item['net_content'] / 1000), 2))
-                        ->setQuantity($item['quantity']);
-
-                    $exportLineItems[] = $exportItem->toArray();
-                }
+                $exportItem->setItemNumber($declare['box_number'] ?? $declare['id'])
+                    ->setUnitPrice($declare['price'])
+                    ->setItemDescription($declare['description'])
+                    ->setQuantityUnitOfMeasurement('KG') //$item['unit']
+                    ->setGrossWeight(number_format(ceil($declare['total_weight']), 2))
+                    ->setNetWeight(number_format(ceil($declare['total_weight']), 2))
+                    ->setQuantity($declare['quantity']);
             }
 
             //发票类型 == 2 就是系统生成
-            $invoice_type = empty($data['invoice_type']) ? 0 : $data['invoice_type'];
+            $invoiceType = empty($data['invoice_type']) ? 0 : $data['invoice_type'];
 
-            if ($invoice_type == 2) {
+            if ($invoiceType == 2) {
                 $shipmentInfo = $shipmentInfo->withCustomsInvoice();
                 $details = $details->withInvoice($exportLineItems)
                     ->setInvoiceDate($this->getYMDCreated())
-                    ->setInvoiceNumber($data['package_number'] ?? '');
+                    ->setInvoiceNumber($data['parcel_number'] ?? '');
             }
         }
 
@@ -345,7 +320,7 @@ class DHLExpress extends Post
      * @param string $description
      * @return Package
      */
-    protected function setPackage(Dimensions $dimension, $data, $reference, $description = ''): Package
+    protected function setPackage(Dimensions $dimension, $data, $reference, string $description = ''): Package
     {
         $package = new Package();
 
