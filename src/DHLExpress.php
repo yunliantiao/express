@@ -161,7 +161,7 @@ class DHLExpress extends Post
                     ->setLength($box['length'])
                     ->setWidth($box['width']);
 
-                $package = $this->setPackage($dimension, $box, $data['vip_id'], $box['description'] == '' ? $cargoType : $data['description']);
+                $package = $this->setPackage($dimension, $box, $data['vip_id'], $box['description'] == '' ? $cargoType : $box['description']);
                 $packages->add($package);
             }
         }
@@ -174,7 +174,7 @@ class DHLExpress extends Post
 
             foreach ($data['declares'] as $declare) {
                 $exportItem = new ExportLineItem();
-                $exportItem->setItemNumber($declare['box_number'] ?? $declare['id'])
+                $exportItem->setItemNumber($declare['number'] ?? $declare['id'])
                     ->setUnitPrice($declare['price'])
                     ->setItemDescription($declare['description'])
                     ->setQuantityUnitOfMeasurement('KG') //$item['unit']
@@ -355,7 +355,7 @@ class DHLExpress extends Post
             ->setPhoneNumber($data['sender_tel_number']);
 
         if ($withRegistrationNumber) {
-            $shipper->setRegistrationNumber($data['package_number'] ?? 'NUM');
+            $shipper->setRegistrationNumber($data['parcel_number'] ?? 'NUM');
         }
 
         return $shipper;
