@@ -241,7 +241,7 @@ class DHLExpress extends Post
                 }
             }
 
-            return $this->updateManyNumbers($globalBarcodes, [$pdfContent]);
+            return $this->updateManyNumbers($globalBarcodes, $pdfContent);
         } catch (PostApiException|InvalidPostInfoException $ex) {
             Logger::printScreen(LogLevel::ERROR, 'DHL面单对接失败', $ex->getMessage());
             throw new PostApiException($ex->getMessage());
