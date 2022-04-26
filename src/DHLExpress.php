@@ -176,6 +176,8 @@ class DHLExpress extends Post
                 ->setGrossWeight(number_format(ceil($declare['total_weight']), 2))
                 ->setNetWeight(number_format(ceil($declare['total_weight']), 2))
                 ->setQuantity($declare['quantity']);
+
+            $exportLineItems[] = $exportItem->toArray();
         }
 
         //发票类型 == 2 就是系统生成
@@ -367,7 +369,7 @@ class DHLExpress extends Post
         $addresseeAddress = $this->pinyin($data['receiver_address1']);
 
         $recipient->setName($this->pinyin($data['receiver_fullname']))
-            ->setCompanyName($this->pinyin($data['receiver_company_name']))
+            ->setCompanyName($this->pinyin(empty($data['receiver_company_name']) ? $data['receiver_fullname'] : $data['receiver_company_name']))
             ->setPhoneNumber($data['receiver_tel_number'])
             ->setCity($this->pinyin($data['receiver_city']))
             ->setPostCode($data['receiver_postcode'])
