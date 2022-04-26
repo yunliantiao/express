@@ -76,8 +76,6 @@ class DHLExpress extends Post
     {
         Logger::printScreen(LogLevel::INFO, 'DHL面单对接原始数据', $data);
 
-        $data['boxes'] = json_decode($data['boxes'], true);
-
         $this->setPackageId($data['parcel_id']);
         $this->setCreated(date('Y-m-d', strtotime($data['created_at'])));
 
@@ -168,30 +166,25 @@ class DHLExpress extends Post
 
         $ship = new Ship();
 
-        //如果是发国际件,非欧洲外
-        if (!$this->isEUCountry($recipient->getCountryCode())) {
-            $exportLineItems = [];
+        $exportLineItems = [];
+        foreach ($data['declares'] as $declare) {
+            $exportItem = new ExportLineItem();
+            $exportItem->setItemNumber($declare['number'] ?? $declare['id'])
+                ->setUnitPrice($declare['price'])
+                ->setItemDescription($declare['description'])
+                ->setQuantityUnitOfMeasurement('KG')
+                ->setGrossWeight(number_format(ceil($declare['total_weight']), 2))
+                ->setNetWeight(number_format(ceil($declare['total_weight']), 2))
+                ->setQuantity($declare['quantity']);
+        }
 
-            foreach ($data['declares'] as $declare) {
-                $exportItem = new ExportLineItem();
-                $exportItem->setItemNumber($declare['number'] ?? $declare['id'])
-                    ->setUnitPrice($declare['price'])
-                    ->setItemDescription($declare['description'])
-                    ->setQuantityUnitOfMeasurement('KG') //$item['unit']
-                    ->setGrossWeight(number_format(ceil($declare['total_weight']), 2))
-                    ->setNetWeight(number_format(ceil($declare['total_weight']), 2))
-                    ->setQuantity($declare['quantity']);
-            }
-
-            //发票类型 == 2 就是系统生成
-            $invoiceType = empty($data['invoice_type']) ? 0 : $data['invoice_type'];
-
-            if ($invoiceType == 2) {
-                $shipmentInfo = $shipmentInfo->withCustomsInvoice();
-                $details = $details->withInvoice($exportLineItems)
-                    ->setInvoiceDate($this->getYMDCreated())
-                    ->setInvoiceNumber($data['parcel_number'] ?? '');
-            }
+        //发票类型 == 2 就是系统生成
+        $invoiceType = empty($data['invoice_type']) ? 0 : $data['invoice_type'];
+        if ($invoiceType == 2) {
+            $shipmentInfo = $shipmentInfo->withCustomsInvoice();
+            $details = $details->withInvoice($exportLineItems)
+                ->setInvoiceDate($this->getYMDCreated())
+                ->setInvoiceNumber($data['parcel_number'] ?? '');
         }
 
         $shipment = (new Shipment())
