@@ -339,7 +339,7 @@ class DHLExpress extends Post
         $shipper = new Shipper();
 
         $shipper->setName($data['sender_fullname'])
-            ->setCompanyName(strlen($data['sender_company_name']) == 0 ? $data['sender_fullname'] : $data['sender_company_name'])
+            ->setCompanyName(empty($data['sender_company_name']) ? $data['sender_fullname'] : $data['sender_company_name'])
             ->setCountryCode($data['sender_country_code'])
             ->setCity($data['sender_city'])
             ->setEmail($data['sender_email'])
