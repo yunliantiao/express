@@ -14,7 +14,7 @@
         "php": ">=8.0",
         "ext-mbstring": "*",
         "guzzlehttp/guzzle": "^6.0 || ^7.0",
-        "monolog/monolog": "^2.5",
+        "monolog/monolog": "^2.0",
         "overtrue/pinyin": "~4.0"
     },
     "require-dev": {
