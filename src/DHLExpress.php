@@ -224,7 +224,7 @@ class DHLExpress extends Post
                 $this->setPdfContent($pdfContent);
             }
 
-            $partnerBarcodes = $globalBarcodes = [];
+            $globalBarcodes = [];
 
             if (is_array($response['PackagesResult']['PackageResult'])) {
                 foreach ($response['PackagesResult']['PackageResult'] as $value) {
@@ -232,14 +232,16 @@ class DHLExpress extends Post
                     $this->setGlobalBarcode($value["TrackingNumber"]);
                     $this->setPartnerBarcode($this->getGlobalBarcode());
 
-                    $partnerBarcodes[] = $this->getGlobalBarcode();
-                    $globalBarcodes[] = $this->getGlobalBarcode();
+                    $globalBarcodes[] = [
+                        'box_number' => $value['@number'],
+                        'tracking_number' => $this->getGlobalBarcode()
+                    ];
 
                     $this->setPartnerCompany("DHL");
                 }
             }
 
-            return $this->updateManyNumbers($globalBarcodes, $partnerBarcodes, [$pdfContent]);
+            return $this->updateManyNumbers($globalBarcodes, [$pdfContent]);
         } catch (PostApiException|InvalidPostInfoException $ex) {
             Logger::printScreen(LogLevel::ERROR, 'DHL面单对接失败', $ex->getMessage());
             throw new PostApiException($ex->getMessage());
@@ -250,18 +252,16 @@ class DHLExpress extends Post
      * 更新多个单号，用于一票多单
      * DHL就是这样
      * @param $globalNumber
-     * @param $partnerNumber
      * @param $expressPdf
      * @return array
      */
-    public function updateManyNumbers($globalNumber, $partnerNumber, $expressPdf)
+    public function updateManyNumbers($globalNumber, $expressPdf)
     {
         return [
-            'express_global_number' => $globalNumber,
-            'express_china_number' => $partnerNumber,
+            'express_number' => $globalNumber,
             'express_pdf' => $expressPdf,
-            'package_id' => $this->getPackageId(),
             'express_code' => $this->getTypeCode(),
+            'parcel_id' => $this->getPackageId(),
             'identification_number' => $this->getShipmentIdentificationNumber()
         ];
     }
