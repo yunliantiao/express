@@ -202,6 +202,8 @@ class DHLExpress extends Post
         try {
             $data = (new DHLRequest($this->apiInfo))->shipmentRequest($shipment);
 
+            Logger::printScreen(LogLevel::ERROR, 'DHL面单返回数据', $data);
+
             $response = $data['ShipmentResponse'];
 
             if ($response['Notification'][0]['@code'] != 0) {
@@ -222,26 +224,22 @@ class DHLExpress extends Post
                 $this->setPdfContent($pdfContent);
             }
 
-            $partnerBarcodes = $globalBarcodes = $globalPdfs = [];
+            $partnerBarcodes = $globalBarcodes = [];
 
             if (is_array($response['PackagesResult']['PackageResult'])) {
-                foreach ($response['PackagesResult']['PackageResult'] as $key => $value) {
+                foreach ($response['PackagesResult']['PackageResult'] as $value) {
                     //获取国际单号
                     $this->setGlobalBarcode($value["TrackingNumber"]);
                     $this->setPartnerBarcode($this->getGlobalBarcode());
 
                     $partnerBarcodes[] = $this->getGlobalBarcode();
                     $globalBarcodes[] = $this->getGlobalBarcode();
-                    $globalPdfs[] = $this->getPdfContent();
 
                     $this->setPartnerCompany("DHL");
                 }
-
-                return $this->updateManyNumbers(
-                    implode(",", $globalBarcodes),
-                    implode(",", $partnerBarcodes),
-                    implode(",", $globalPdfs));
             }
+
+            return $this->updateManyNumbers($globalBarcodes, $partnerBarcodes, [$pdfContent]);
         } catch (PostApiException|InvalidPostInfoException $ex) {
             Logger::printScreen(LogLevel::ERROR, 'DHL面单对接失败', $ex->getMessage());
             throw new PostApiException($ex->getMessage());
@@ -264,6 +262,7 @@ class DHLExpress extends Post
             'express_pdf' => $expressPdf,
             'package_id' => $this->getPackageId(),
             'express_code' => $this->getTypeCode(),
+            'identification_number' => $this->getShipmentIdentificationNumber()
         ];
     }
 
@@ -305,6 +304,13 @@ class DHLExpress extends Post
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getShipmentIdentificationNumber(): string
+    {
+        return $this->shipmentIdentificationNumber;
+    }
 
     /**
      * 设置包裹参数
@@ -319,7 +325,7 @@ class DHLExpress extends Post
     {
         $package = new Package();
 
-        $package->setNumber($data["qty"])
+        $package->setNumber($data["number"])
             ->setDimensions($dimension)
             ->setWeight((int)$data["weight"])  //use g
             ->setPackageContentDescription($description == "" ? 'Goods' : $description)
