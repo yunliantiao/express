@@ -305,7 +305,7 @@ class ShipmentInfo implements Arrayable
             'CustomsInvoiceTemplate' => 'COMMERCIAL_INVOICE_03',
             'LabelOptions' => [
                 'RequestWaybillDocument' => 'Y',
-                'RequestDHLCustomsInvoice' => 'N',
+                'RequestDHLCustomsInvoice' => 'Y',
                 'DHLCustomsInvoiceType' => 'PROFORMA_INVOICE',
                 'DetachOptions' => [
                     'AllInOnePDF' => 'Y',
