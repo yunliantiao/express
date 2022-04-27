@@ -311,6 +311,16 @@ class ShipmentInfo implements Arrayable
                     'AllInOnePDF' => 'Y',
                 ],
             ],
+            'SpecialServices' => [
+                'Service' => [
+                    [
+                        'ServiceType' => 'PJ',
+                    ],
+                    [
+                        'ServiceType' => 'CR',
+                    ],
+                ],
+            ],
         ];
     }
 
