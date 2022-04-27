@@ -330,7 +330,7 @@ class Shipper implements ArrayAble
             'RegistrationNumbers' => [
                 'RegistrationNumber' => [
                     'Number' => $this->getRegistrationNumber(),
-                    'NumberTypeCode' => 'VAT',
+                    'NumberTypeCode' => $this->getNumberTypeCode(),
                     'NumberIssuerCountryCode' => $this->getCountryCode(),
                 ],
             ],

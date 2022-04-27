@@ -186,7 +186,7 @@ class DHLExpress extends Post
             $shipmentInfo = $shipmentInfo->withCustomsInvoice();
             $details = $details->withInvoice($exportLineItems)
                 ->setInvoiceDate($this->getYMDCreated())
-                ->setInvoiceNumber(' ')
+                ->setInvoiceNumber($data['parcel_number'])
                 ->setExportReason($data['cargo_use']);
         }
 
