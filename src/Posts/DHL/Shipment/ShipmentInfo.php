@@ -59,18 +59,18 @@ class ShipmentInfo implements Arrayable
     /** @var float */
     protected float $insuranceValue;
 
+    /** @var bool  */
+    protected bool $withCustomsInvoice = false;
+
+    /** @var bool */
+    protected bool $withInsurance = false;
+
+    /** @var bool */
+    protected bool $withDocumentInsurance = false;
+
     /**
-     * @var bool
+     * @return float
      */
-    protected $withCustomsInvoice = false;
-
-    /** @var bool */
-    protected $withInsurance = false;
-
-    /** @var bool */
-    protected $withDocumentInsurance = false;
-
-    /**  */
     public function getInsuranceValue(): float
     {
         return $this->insuranceValue;

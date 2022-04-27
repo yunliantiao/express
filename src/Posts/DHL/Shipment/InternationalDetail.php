@@ -27,24 +27,27 @@ class InternationalDetail implements ArrayAble
     public const NON_DOCUMENTS = 'NON_DOCUMENTS';
 
     /** @var */
-    protected $Description;
+    protected mixed $description;
 
     /** @var */
-    protected $customsValue;
+    protected mixed $customsValue;
 
-    protected $content = 'NON_DOCUMENTS';
-
-    /** @var string */
-    protected $invoiceDate = '';
+    protected string $content = 'NON_DOCUMENTS';
 
     /** @var string */
-    protected $invoiceNumber = '';
+    protected string $invoiceDate = '';
+
+    /** @var string */
+    protected string $invoiceNumber = '';
 
     /** @var array */
-    protected $exportLineItems = [];
+    protected array $exportLineItems = [];
 
     /** @var bool */
-    protected $requestInvoice = false;
+    protected bool $requestInvoice = false;
+
+    /** @var string  */
+    protected string $exportReason = '';
 
     /**
      * @param array $items
@@ -55,6 +58,25 @@ class InternationalDetail implements ArrayAble
         $this->requestInvoice = true;
 
         $this->exportLineItems = $items;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExportReason(): string
+    {
+        return $this->exportReason;
+    }
+
+    /**
+     * @param string $exportReason
+     * @return InternationalDetail
+     */
+    public function setExportReason(string $exportReason)
+    {
+        $this->exportReason = $exportReason;
 
         return $this;
     }
@@ -84,16 +106,16 @@ class InternationalDetail implements ArrayAble
      */
     public function getDescription()
     {
-        return $this->Description;
+        return $this->description;
     }
 
     /**
-     * @param mixed $Description
+     * @param mixed $description
      * @return InternationalDetail
      */
-    public function setDescription($Description)
+    public function setDescription($description)
     {
-        $this->Description = $Description;
+        $this->description = $description;
 
         return $this;
     }
@@ -207,6 +229,7 @@ class InternationalDetail implements ArrayAble
             'ExportDeclaration' => [
                 'InvoiceDate' => $this->getInvoiceDate(),
                 'InvoiceNumber' => $this->getInvoiceNumber(),
+                'ExportReason' => $this->getExportReason(),
                 'ExportLineItems' => [
                     'ExportLineItem' => $this->getExportLineItems(),
                 ],

@@ -30,7 +30,7 @@ class Shipment
     protected string $paymentInfo = 'DAP';
 
     /** @var  */
-    protected $internationalDetail;
+    protected mixed $internationalDetail;
 
     /** @var mixed  */
     protected mixed $ship;

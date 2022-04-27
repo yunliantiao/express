@@ -159,7 +159,7 @@ class DHLExpress extends Post
                     ->setLength($box['length'])
                     ->setWidth($box['width']);
 
-                $package = $this->setPackage($dimension, $box, $data['vip_id'], $box['description'] == '' ? $cargoType : $box['description']);
+                $package = $this->setPackage($dimension, $box, $data['vip_number'], $box['description'] == '' ? $cargoType : $box['description']);
                 $packages->add($package);
             }
         }
@@ -186,7 +186,8 @@ class DHLExpress extends Post
             $shipmentInfo = $shipmentInfo->withCustomsInvoice();
             $details = $details->withInvoice($exportLineItems)
                 ->setInvoiceDate($this->getYMDCreated())
-                ->setInvoiceNumber($data['parcel_number'] ?? '');
+                ->setInvoiceNumber('')
+                ->setExportReason($data['cargo_use']);
         }
 
         $shipment = (new Shipment())
@@ -325,9 +326,9 @@ class DHLExpress extends Post
     {
         $package = new Package();
 
-        $package->setNumber($data["number"])
+        $package->setNumber($data['number'])
             ->setDimensions($dimension)
-            ->setWeight((int)$data["weight"])  //use g
+            ->setWeight((int)$data['weight'])  //use g
             ->setPackageContentDescription($description == "" ? 'Goods' : $description)
             ->setCustomerReferences($reference);
 
@@ -356,7 +357,7 @@ class DHLExpress extends Post
             ->setPhoneNumber($data['sender_tel_number']);
 
         if ($withRegistrationNumber) {
-            $shipper->setRegistrationNumber($data['parcel_number'] ?? 'NUM');
+            $shipper->setRegistrationNumber($data['sender_tax_number'] ?? 'NUM');
         }
 
         return $shipper;
