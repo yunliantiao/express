@@ -326,7 +326,7 @@ class ShipmentInfo implements Arrayable
                 'ShipperAccountNumber' => $this->getAccount(),
                 'ShippingPaymentType' => 'R',
                 'BillingAccountNumber' => $this->getAccount(),
-                'NeverOverrideBillingService' => 'N'
+                'NeverOverrideBillingService' => 'Y'
             ]
         ];
     }
