@@ -203,7 +203,7 @@ class DHLExpress extends Post
         try {
             $data = (new DHLRequest($this->apiInfo))->shipmentRequest($shipment);
 
-            Logger::printScreen(LogLevel::ERROR, 'DHL面单返回数据', $data);
+            Logger::printScreen(LogLevel::INFO, 'DHL面单返回数据', $data);
 
             $response = $data['ShipmentResponse'];
 

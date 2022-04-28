@@ -346,12 +346,14 @@ class ShipmentInfo implements Arrayable
         }
 
         if ($this->withInsurance) {
-            $data += $this->insuranceService();
+            $data = array_merge($data, $this->insuranceService());
         }
 
         if ($this->withDocumentInsurance) {
-            $data += $this->documentInsuranceService();
+            $data = array_merge($data, $this->documentInsuranceService());
         }
+
+        dump($data);
 
         return $data;
     }

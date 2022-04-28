@@ -95,9 +95,9 @@ class Package implements Arrayable
      * @param int $weight
      * @return Package
      */
-    public function setWeight(int $weight)
+    public function setWeight($weight)
     {
-        $this->weight = sprintf('%.3f', $weight);
+        $this->weight = $weight;
 
         return $this;
     }
