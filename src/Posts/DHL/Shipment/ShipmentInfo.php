@@ -298,7 +298,7 @@ class ShipmentInfo implements Arrayable
         return [
             'DropOffType' => $this->getDropOffType(),
             'ServiceType' => $this->getServiceType(),
-            'Account' => $this->getAccount(),
+//            'Account' => $this->getAccount(),
             'Currency' => $this->getCurrency(),
             'UnitOfMeasurement' => $this->getUnitOfMeasurement(),
             'LabelType' => $this->getLabelType(),
@@ -319,9 +319,6 @@ class ShipmentInfo implements Arrayable
                     [
                         'ServiceType' => 'CR',
                     ],
-                    [
-                        'ServiceType' => 'DS',
-                    ]
                 ],
             ],
             'Billing' => [
