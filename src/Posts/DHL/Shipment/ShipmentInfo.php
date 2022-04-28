@@ -298,7 +298,7 @@ class ShipmentInfo implements Arrayable
         return [
             'DropOffType' => $this->getDropOffType(),
             'ServiceType' => $this->getServiceType(),
-//            'Account' => $this->getAccount(),
+            'Account' => $this->getAccount(),
             'Currency' => $this->getCurrency(),
             'UnitOfMeasurement' => $this->getUnitOfMeasurement(),
             'LabelType' => $this->getLabelType(),
@@ -324,13 +324,13 @@ class ShipmentInfo implements Arrayable
                     ],
                 ],
             ],
-            'Billing' => [
-                'ShipperAccountNumber' => $this->getAccount(),
-                'BillingAccountNumber' => $this->getAccount(),
-                'ShippingPaymentType' => 'T',
+//            'Billing' => [
+//                'ShipperAccountNumber' => $this->getAccount(),
+//                'BillingAccountNumber' => $this->getAccount(),
+//                'ShippingPaymentType' => 'T',
 //                'DutyAndTaxPayerAccountNumber' => $this->getAccount(),
 //                'NeverOverrideBillingService' => 'Y'
-            ]
+//            ]
         ];
     }
 

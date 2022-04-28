@@ -27,7 +27,7 @@ class Shipment
     protected string $shipTimestamp;
 
     /** @var string  */
-    protected string $paymentInfo = 'DDU';
+    protected string $paymentInfo = 'DAP';
 
     /** @var  */
     protected mixed $internationalDetail;
