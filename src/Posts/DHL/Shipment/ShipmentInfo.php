@@ -321,6 +321,9 @@ class ShipmentInfo implements Arrayable
                     ],
                 ],
             ],
+            'Billing' => [
+                'DutyAndTaxPayerAccountNumber' => 'Receiver Will Pay'
+            ]
         ];
     }
 
