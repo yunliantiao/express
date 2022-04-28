@@ -352,9 +352,7 @@ class ShipmentInfo implements Arrayable
         if ($this->withDocumentInsurance) {
             $data = array_merge($data, $this->documentInsuranceService());
         }
-
-        dump($data);
-
+        
         return $data;
     }
 

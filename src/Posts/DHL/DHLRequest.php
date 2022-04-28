@@ -12,8 +12,10 @@
 namespace Txtech\Express\Posts\DHL;
 
 use GuzzleHttp\Psr7\Request;
+use Psr\Log\LogLevel;
 use Txtech\Express\Core\HttpClient\HttpClient;
 use Txtech\Express\Core\HttpClient\HttpClientException;
+use Txtech\Express\Core\Log\Logger;
 use Txtech\Express\Posts\PostApiException;
 
 /**
@@ -62,6 +64,8 @@ class DHLRequest
      */
     public function shipmentRequest(array $body): mixed
     {
+        Logger::printScreen(LogLevel::INFO, 'DHL面单对接数据', $body);
+
         $this->endPoint = '/ShipmentRequest';
 
         try {
