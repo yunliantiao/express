@@ -322,11 +322,11 @@ class ShipmentInfo implements Arrayable
                 ],
             ],
             'Billing' => [
-                'DutyAndTaxPayerAccountNumber' => '',
+                'DutyAndTaxPayerAccountNumber' => $this->getAccount(),
                 'ShipperAccountNumber' => $this->getAccount(),
                 'ShippingPaymentType' => 'R',
                 'BillingAccountNumber' => $this->getAccount(),
-                'NeverOverrideBillingService' => 'Y'
+//                'NeverOverrideBillingService' => 'Y'
             ]
         ];
     }
