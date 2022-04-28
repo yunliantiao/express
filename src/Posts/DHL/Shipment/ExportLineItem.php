@@ -186,6 +186,7 @@ class ExportLineItem implements Arrayable
             'UnitPrice' => $this->getUnitPrice(),
             'NetWeight' => $this->getNetWeight(),
             'GrossWeight' => $this->getGrossWeight(),
+            'TaxesPaid' => 'N'
         ];
     }
 
