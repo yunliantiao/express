@@ -319,6 +319,9 @@ class ShipmentInfo implements Arrayable
                     [
                         'ServiceType' => 'CR',
                     ],
+                    [
+                        'ServiceType' => 'DS',
+                    ]
                 ],
             ],
             'Billing' => [
