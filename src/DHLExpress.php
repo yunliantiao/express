@@ -328,7 +328,7 @@ class DHLExpress extends Post
 
         $package->setNumber($data['number'])
             ->setDimensions($dimension)
-            ->setWeight((int)$data['weight'])  //use g
+            ->setWeight($data['weight'])  //use g
             ->setPackageContentDescription($description == "" ? 'Goods' : $description)
             ->setCustomerReferences($reference);
 
