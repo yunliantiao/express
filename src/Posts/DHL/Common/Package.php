@@ -23,27 +23,27 @@ class Package implements Arrayable
     /**
      * @var int
      */
-    protected $number;
+    protected int $number;
 
     /**
      * @var float
      */
-    protected $weight;
+    protected mixed $weight;
 
     /**
      * @var Dimensions
      */
-    protected $dimensions;
+    protected Dimensions $dimensions;
 
     /**
      * @var string
      */
-    protected $customerReferences;
+    protected string $customerReferences;
 
     /**
      * @var string
      */
-    protected $packageContentDescription = '';
+    protected string $packageContentDescription = '';
 
     /**
      * @return string
@@ -67,7 +67,7 @@ class Package implements Arrayable
     /**
      * @return int
      */
-    public function getNumber()
+    public function getNumber(): int
     {
         return $this->number;
     }
@@ -76,7 +76,7 @@ class Package implements Arrayable
      * @param int $number
      * @return Package
      */
-    public function setNumber(int $number)
+    public function setNumber(int $number): static
     {
         $this->number = $number;
 
@@ -84,18 +84,18 @@ class Package implements Arrayable
     }
 
     /**
-     * @return float
+     * @return mixed
      */
-    public function getWeight()
+    public function getWeight(): mixed
     {
         return $this->weight;
     }
 
     /**
-     * @param int $weight
+     * @param mixed $weight
      * @return Package
      */
-    public function setWeight($weight)
+    public function setWeight(mixed $weight): static
     {
         $this->weight = $weight;
 
@@ -105,7 +105,7 @@ class Package implements Arrayable
     /**
      * @return Dimensions
      */
-    public function getDimensions()
+    public function getDimensions(): Dimensions
     {
         return $this->dimensions;
     }
@@ -114,7 +114,7 @@ class Package implements Arrayable
      * @param Dimensions $dimensions
      * @return Package
      */
-    public function setDimensions(Dimensions $dimensions)
+    public function setDimensions(Dimensions $dimensions): static
     {
         $this->dimensions = $dimensions;
 
@@ -124,7 +124,7 @@ class Package implements Arrayable
     /**
      * @return string
      */
-    public function getCustomerReferences()
+    public function getCustomerReferences(): string
     {
         return $this->customerReferences;
     }
@@ -133,13 +133,16 @@ class Package implements Arrayable
      * @param string $customerReferences
      * @return Package
      */
-    public function setCustomerReferences(string $customerReferences)
+    public function setCustomerReferences(string $customerReferences): static
     {
         $this->customerReferences = $customerReferences;
 
         return $this;
     }
 
+    /**
+     * @return array
+     */
     protected function map()
     {
         return [
@@ -158,7 +161,7 @@ class Package implements Arrayable
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->map();
     }

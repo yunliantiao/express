@@ -40,7 +40,7 @@ class Dimensions
      */
     public function setLength(mixed $length): static
     {
-        $this->length = sprintf('%.1f', $length / 10);
+        $this->length = sprintf('%.1f', $length);
 
         return $this;
     }
@@ -59,7 +59,7 @@ class Dimensions
      */
     public function setWidth($width): static
     {
-        $this->width = sprintf('%.1f', $width / 10);
+        $this->width = sprintf('%.1f', $width);
 
         return $this;
     }
@@ -78,7 +78,7 @@ class Dimensions
      */
     public function setHeight($height): static
     {
-        $this->height = sprintf('%.1f', $height / 10);
+        $this->height = sprintf('%.1f', $height);
 
         return $this;
     }
