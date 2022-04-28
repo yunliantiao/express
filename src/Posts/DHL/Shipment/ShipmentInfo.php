@@ -319,13 +319,16 @@ class ShipmentInfo implements Arrayable
                     [
                         'ServiceType' => 'CR',
                     ],
+                    [
+                        'ServiceType' => 'DS',
+                    ],
                 ],
             ],
             'Billing' => [
-                'DutyAndTaxPayerAccountNumber' => $this->getAccount(),
                 'ShipperAccountNumber' => $this->getAccount(),
-                'ShippingPaymentType' => 'R',
                 'BillingAccountNumber' => $this->getAccount(),
+                'ShippingPaymentType' => 'T',
+//                'DutyAndTaxPayerAccountNumber' => $this->getAccount(),
 //                'NeverOverrideBillingService' => 'Y'
             ]
         ];
