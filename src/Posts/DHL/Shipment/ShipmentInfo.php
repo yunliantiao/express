@@ -311,19 +311,6 @@ class ShipmentInfo implements Arrayable
                     'AllInOnePDF' => 'Y',
                 ],
             ],
-            'SpecialServices' => [
-                'Service' => [
-                    [
-                        'ServiceType' => 'PJ',
-                    ],
-                    [
-                        'ServiceType' => 'CR',
-                    ],
-                    [
-                        'ServiceType' => 'DS',
-                    ],
-                ],
-            ],
             'Billing' => [
                 'ShipperAccountNumber' => $this->getAccount(),
                 'BillingAccountNumber' => $this->getAccount(),
