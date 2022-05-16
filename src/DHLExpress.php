@@ -83,6 +83,7 @@ class DHLExpress extends Post
         $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_OTHER);
 
         $cargoType = $data['cargo_type'];
+        $serverType = $data['server_type'];
 
         $details = (new InternationalDetail())
             ->setDescription($cargoType)
@@ -98,54 +99,7 @@ class DHLExpress extends Post
             }
         }
 
-        if ($cargoType == 'Documents') {
-            $details->setContentDocuments();
-            //如果寄往欧盟国家，更改服务类型为欧盟
-            // if ($this->isEUCountry($data['country_code'])) {
-            //     $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_EU);
-            //     //如果是国际件
-            // } elseif ($this->isInternationalRecipientCountry($data['country_code'])) {
-            //     $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_OTHER_DOC);
-            // }
-            //文件 世界的都有 D
-            $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_OTHER_DOC);
-        }
-
-        //如果欧洲境内 U
-        if ($this->isEuropeanCountry($data['receiver_country_code'])) {
-            $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_EU);
-        }
-
-        // 奥地利 法国 英国 荷兰 希腊 比利时 德国 西班牙
-        // 改成U
-        // CONTENTS 用DOCUMENTS
-        // 挪威  瑞士 用 P
-        //英国  比利时 卢森堡，奥地利，葡萄牙，希腊，爱尔兰，克罗地亚，匈牙利，瑞典，波兰，芬兰，捷克，罗马尼亚，斯洛伐克，丹麦
-        //，斯罗维尼亚，都是欧洲国家 CONTENT 用DOCUMENTS
-        // 只是服务用  U ，之前用的是 W
-
-        //如果是欧盟国家
-        if ($this->isEUCountry($data['receiver_country_code'])) {
-            $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_EU);
-            //如果是奥地利 法国 英国 荷兰 希腊 比利时 德国 西班牙 W
-            //Update: 2020/12/07 奥地利 法国 英国 荷兰 希腊 比利时 德国 西班牙改成U CONTENTS 用DOCUMENTS
-            //if ($this->isServerTypeW($data['country_code'])) {
-            //    $shipmentInfo->setServiceType('W');
-            //}
-            //英国  比利时 卢森堡，奥地利，葡萄牙，希腊，爱尔兰，克罗地亚，匈牙利，瑞典，波兰，芬兰，捷克，罗马尼亚，斯洛伐克，丹麦
-            //，斯罗维尼亚，都是欧洲国家 CONTENT 用DOCUMENTS
-            $details->setContentDocuments();
-        }
-
-        //如果是挪威 瑞士 P
-        if ($this->isServerTypeP($data['receiver_country_code'])) {
-            $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_OTHER);
-        }
-
-        //如果寄往地区是意大利，更改服务类型为 N
-        if ($data['receiver_country_code'] == 'IT') {
-            $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_IT);
-        }
+        $shipmentInfo->setServiceType($serverType);
 
         $recipient = $this->setRecipient($data);
         $shipper = $this->setShipper($data);
@@ -155,9 +109,7 @@ class DHLExpress extends Post
         if ($data['boxes']) {
             foreach ($data['boxes'] as $box) {
                 $dimension = new Dimensions();
-                $dimension->setHeight($box['height'])
-                    ->setLength($box['length'])
-                    ->setWidth($box['width']);
+                $dimension->setHeight($box['height'])->setLength($box['length'])->setWidth($box['width']);
 
                 $package = $this->setPackage($dimension, $box, $data['vip_number'], $box['description'] == '' ? $cargoType : $box['description']);
                 $packages->add($package);
@@ -167,17 +119,31 @@ class DHLExpress extends Post
         $ship = new Ship();
 
         $exportLineItems = [];
-        foreach ($data['declares'] as $declare) {
-            $exportItem = new ExportLineItem();
-            $exportItem->setItemNumber($declare['number'] ?? $declare['id'])
-                ->setUnitPrice($declare['price'])
-                ->setItemDescription($declare['description'])
-                ->setQuantityUnitOfMeasurement('KG')
-                ->setGrossWeight(number_format(ceil($declare['total_weight']), 2))
-                ->setNetWeight(number_format(ceil($declare['total_weight']), 2))
-                ->setQuantity($declare['quantity']);
+
+        if ($cargoType == 'Documents') {
+            $exportItem = new Shipment\ExportLineItem();
+            $exportItem->setItemNumber(1)
+                ->setUnitPrice($data['total_price'])
+                ->setItemDescription($cargoType)
+                ->setQuantityUnitOfMeasurement('weight_unit')
+                ->setGrossWeight(number_format(ceil($data['total_value']), 2))
+                ->setNetWeight(number_format(ceil($data['total_value']), 2))
+                ->setQuantity(1);
 
             $exportLineItems[] = $exportItem->toArray();
+        } else {
+            foreach ($data['declares'] as $declare) {
+                $exportItem = new ExportLineItem();
+                $exportItem->setItemNumber($declare['number'] ?? $declare['id'])
+                    ->setUnitPrice($declare['price'])
+                    ->setItemDescription($declare['description'])
+                    ->setQuantityUnitOfMeasurement('KG')
+                    ->setGrossWeight(number_format(ceil($declare['total_weight']), 2))
+                    ->setNetWeight(number_format(ceil($declare['total_weight']), 2))
+                    ->setQuantity($declare['quantity']);
+
+                $exportLineItems[] = $exportItem->toArray();
+            }
         }
 
         //发票类型 == 2 就是系统生成
@@ -411,49 +377,6 @@ class DHLExpress extends Post
         }
 
         return $recipient;
-    }
-
-    /**
-     * @param string $code
-     * @return bool
-     */
-    protected function isServerTypeP(string $code)
-    {
-        $code = $this->convertCountryCode($code);
-        //挪威  P
-        //瑞士  P
-        return in_array($code, [
-            'NO', 'CH',
-        ]);
-    }
-
-    /**
-     * @param string $code
-     * @return bool
-     */
-    protected function isEUCountry(string $code)
-    {
-        $code = $this->convertCountryCode($code);
-
-        return in_array($code, [
-            'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU',
-            'MT', 'NL', 'PO', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE',
-        ]);
-    }
-
-    /**
-     * @param string $code
-     * @return bool
-     */
-    protected function isEuropeanCountry(string $code)
-    {
-        $code = $this->convertCountryCode($code);
-
-        return in_array($code, [
-            'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU',
-            'MT', 'NL', 'PO', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'AL', 'AD', 'AM', 'BY', 'BA', 'FO', 'GE', 'GI', 'IS',
-            'IM', 'XK', 'LI', 'MK', 'MD', 'MC', 'MN', 'NO', 'RU', 'SM', 'RS', 'CH', 'TR', 'UA', 'GB', 'VA'
-        ]);
     }
 
     /**

@@ -32,6 +32,7 @@ class InternationalDetail implements ArrayAble
     /** @var */
     protected mixed $customsValue;
 
+    /** @var string  */
     protected string $content = 'NON_DOCUMENTS';
 
     /** @var string */
