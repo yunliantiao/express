@@ -101,8 +101,8 @@ class DHLExpress extends Post
 
         $shipmentInfo->setServiceType($serverType);
 
-        $recipient = $this->setRecipient($data);
         $shipper = $this->setShipper($data);
+        $recipient = $this->setRecipient($data);
 
         $packages = new Packages();
 
@@ -347,6 +347,10 @@ class DHLExpress extends Post
             ->setCity($this->pinyin($data['receiver_city']))
             ->setPostCode($data['receiver_postcode'])
             ->setCountryCode($data['receiver_country_code']);
+
+        if (!empty($data['receiver_province'])) {
+            $recipient->setStateOrProvinceCode($data['receiver_province']);
+        }
 
         //因为这个地址长度的原因,最多只能45个长度
         if (strlen($addresseeAddress) <= 45) {
