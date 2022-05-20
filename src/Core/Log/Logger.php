@@ -52,6 +52,6 @@ class Logger
 
         if (is_array($context)) $context = json_encode($context, 256);
 
-        file_put_contents($filePath, '[' . $level . '] [' . strftime('%T %Y-%m-%d') . '] ' . $message . ' ' . $context . PHP_EOL);
+        file_put_contents($filePath, '[' . $level . '] [' . strftime('%T %Y-%m-%d') . '] ' . $message . ' ' . $context . PHP_EOL, FILE_APPEND);
     }
 }
