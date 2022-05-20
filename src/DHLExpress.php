@@ -87,7 +87,8 @@ class DHLExpress extends Post
 
         $details = (new InternationalDetail())
             ->setDescription($cargoType)
-            ->setCustomsValue($data['total_value']);
+            ->setCustomsValue($data['total_value'])
+            ->setContent($data['content_type']);
 
         //如果设置了保险，加上保险服务
         if ($data['is_enabled_insurance']) {
@@ -131,7 +132,6 @@ class DHLExpress extends Post
                 ->setQuantity(1);
 
             $exportLineItems[] = $exportItem->toArray();
-            $details->setContentDocuments();
         } else {
             foreach ($data['declares'] as $declare) {
                 $exportItem = new ExportLineItem();
@@ -145,7 +145,6 @@ class DHLExpress extends Post
 
                 $exportLineItems[] = $exportItem->toArray();
             }
-            $details->setContentNonDocuments();
         }
 
         //发票类型 == 2 就是系统生成
