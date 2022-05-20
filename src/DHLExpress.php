@@ -80,13 +80,12 @@ class DHLExpress extends Post
         $this->setCreated(date('Y-m-d', strtotime($data['created_at'])));
 
         $shipmentInfo = (new ShipmentInfo())->setAccount($this->accountCode);
-        $shipmentInfo->setServiceType(ShipmentInfo::SERVICE_TYPE_OTHER);
+        $shipmentInfo->setServiceType($data['server_type'])->setRequestDHLCustomsInvoice($data['customs_invoice']);
 
         $cargoType = $data['cargo_type'];
-        $serverType = $data['server_type'];
 
         $details = (new InternationalDetail())
-            ->setDescription($cargoType)
+            ->setDescription($data['shipment_content'])
             ->setCustomsValue($data['total_value'])
             ->setContent($data['content_type']);
 
@@ -100,7 +99,6 @@ class DHLExpress extends Post
             }
         }
 
-        $shipmentInfo->setServiceType($serverType);
 
         $shipper = $this->setShipper($data);
         $recipient = $this->setRecipient($data);

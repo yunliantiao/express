@@ -68,6 +68,9 @@ class ShipmentInfo implements Arrayable
     /** @var bool */
     protected bool $withDocumentInsurance = false;
 
+    /** @var string  */
+    protected string $requestDHLCustomsInvoice = 'Y';
+
     /**
      * @return float
      */
@@ -260,6 +263,25 @@ class ShipmentInfo implements Arrayable
     }
 
     /**
+     * @param string $value
+     * @return $this
+     */
+    public function setRequestDHLCustomsInvoice(string $value)
+    {
+        $this->requestDHLCustomsInvoice = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestDHLCustomsInvoice()
+    {
+        return $this->requestDHLCustomsInvoice;
+    }
+
+    /**
      * @return $this
      */
     public function withCustomsInvoice()
@@ -305,7 +327,7 @@ class ShipmentInfo implements Arrayable
             'CustomsInvoiceTemplate' => 'COMMERCIAL_INVOICE_03',
             'LabelOptions' => [
                 'RequestWaybillDocument' => 'Y',
-                'RequestDHLCustomsInvoice' => 'Y',
+                'RequestDHLCustomsInvoice' => $this->getRequestDHLCustomsInvoice(),
                 'DHLCustomsInvoiceType' => 'PROFORMA_INVOICE',
                 'DetachOptions' => [
                     'AllInOnePDF' => 'Y',
