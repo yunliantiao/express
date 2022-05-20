@@ -167,6 +167,8 @@ class DHLExpress extends Post
 
         $this->toArray($shipment);
 
+        Logger::saveFile(LogLevel::INFO, 'shipment:', $shipment);
+
         try {
             $data = (new DHLRequest($this->apiInfo))->shipmentRequest($shipment);
 

@@ -33,4 +33,21 @@ class Logger
             );
         }
     }
+
+    /**
+     * @param $level
+     * @param $message
+     * @param $context
+     * @return void
+     */
+    public static function saveFile($level, $message, $context)
+    {
+        $fileDir = '/var/www/html/storage/logs/dhl/';
+        $fileName = date('Y-m-d-h-i-s') . '.log';
+        $filePath = $fileDir . $fileName;
+
+        if (is_array($context)) $context = json_encode($context);
+
+        file_put_contents($filePath, '[' . $level . '] [' . strftime('%T %Y-%m-%d') . '] ' . $message . ' ' . $context . PHP_EOL);
+    }
 }
