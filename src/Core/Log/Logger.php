@@ -43,8 +43,12 @@ class Logger
     public static function saveFile($level, $message, $context)
     {
         $fileDir = '/var/www/html/storage/logs/dhl/';
-        $fileName = date('Y-m-d-h-i-s') . '.log';
+        $fileName = date('Y-m-d') . '.log';
         $filePath = $fileDir . $fileName;
+
+        if (!file_exists($filePath)) {
+            mkdir($filePath);
+        }
 
         if (is_array($context)) $context = json_encode($context);
 
