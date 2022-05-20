@@ -131,6 +131,7 @@ class DHLExpress extends Post
                 ->setQuantity(1);
 
             $exportLineItems[] = $exportItem->toArray();
+            $details->setContentDocuments();
         } else {
             foreach ($data['declares'] as $declare) {
                 $exportItem = new ExportLineItem();
@@ -144,6 +145,7 @@ class DHLExpress extends Post
 
                 $exportLineItems[] = $exportItem->toArray();
             }
+            $details->setContentNonDocuments();
         }
 
         //发票类型 == 2 就是系统生成
