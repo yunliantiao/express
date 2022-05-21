@@ -299,7 +299,7 @@ class ShipmentInfo implements Arrayable
         return [
             'DropOffType' => $this->getDropOffType(),
             'ServiceType' => $this->getServiceType(),
-//            'Account' => $this->getAccount(),
+            'Account' => $this->getAccount(),
             'Currency' => $this->getCurrency(),
             'UnitOfMeasurement' => $this->getUnitOfMeasurement(),
             'LabelType' => $this->getLabelType(),
@@ -320,7 +320,7 @@ class ShipmentInfo implements Arrayable
         return [
             'DropOffType' => $this->getDropOffType(),
             'ServiceType' => $this->getServiceType(),
-//            'Account' => $this->getAccount(),
+            'Account' => $this->getAccount(),
             'Currency' => $this->getCurrency(),
             'UnitOfMeasurement' => $this->getUnitOfMeasurement(),
             'LabelType' => $this->getLabelType(),
@@ -333,13 +333,6 @@ class ShipmentInfo implements Arrayable
                     'AllInOnePDF' => 'Y',
                 ],
             ],
-            'Billing' => [
-                'ShipperAccountNumber' => $this->getAccount(),
-                'BillingAccountNumber' => $this->getAccount(),
-                'ShippingPaymentType' => 'R',
-//                'DutyAndTaxPayerAccountNumber' => '',
-//                'NeverOverrideBillingService' => 'Y'
-            ]
         ];
     }
 
