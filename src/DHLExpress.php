@@ -319,7 +319,7 @@ class DHLExpress extends Post
             ->setCountryCode($data['sender_country_code'])
             ->setCity($data['sender_city'])
             ->setEmail($data['sender_email'])
-            ->setStreet($data['sender_address1'])
+            ->setStreet($data['sender_address1'] . ' ' . $data['sender_door_number'])
             ->setPostCode($data['sender_postcode'])
             ->setPhoneNumber($data['sender_tel_number']);
 
@@ -340,7 +340,7 @@ class DHLExpress extends Post
     {
         $recipient = new Recipient();
 
-        $addresseeAddress = $this->pinyin($data['receiver_address1']);
+        $addresseeAddress = $this->pinyin($data['receiver_address1'] . ' ' . $data['receiver_door_number']);
 
         $recipient->setName($this->pinyin($data['receiver_fullname']))
             ->setCompanyName($this->pinyin(empty($data['receiver_company_name']) ? $data['receiver_fullname'] : $data['receiver_company_name']))
