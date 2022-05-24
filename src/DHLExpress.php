@@ -80,7 +80,9 @@ class DHLExpress extends Post
         $this->setCreated(date('Y-m-d', strtotime($data['created_at'])));
 
         $shipmentInfo = (new ShipmentInfo())->setAccount($this->accountCode);
-        $shipmentInfo->setServiceType($data['server_type'])->setRequestDHLCustomsInvoice($data['customs_invoice']);
+        $shipmentInfo->setServiceType($data['server_type'])
+            ->setRequestDHLCustomsInvoice($data['customs_invoice'])
+            ->setRequestWaybillDocument($data['waybill_document']);
 
         $cargoType = $data['cargo_type'];
 
@@ -98,7 +100,6 @@ class DHLExpress extends Post
                 $shipmentInfo->withInsurance()->setInsuranceValue($data['insurance_cost']);
             }
         }
-
 
         $shipper = $this->setShipper($data);
         $recipient = $this->setRecipient($data);

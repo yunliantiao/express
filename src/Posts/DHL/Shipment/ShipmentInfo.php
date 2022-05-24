@@ -71,6 +71,9 @@ class ShipmentInfo implements Arrayable
     /** @var string  */
     protected string $requestDHLCustomsInvoice = 'Y';
 
+    /** @var string  */
+    protected string $requestWaybillDocument = 'Y';
+
     /**
      * @return float
      */
@@ -282,6 +285,25 @@ class ShipmentInfo implements Arrayable
     }
 
     /**
+     * @param string $value
+     * @return $this
+     */
+    public function setRequestWaybillDocument(string $value)
+    {
+        $this->requestWaybillDocument = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestWaybillDocument()
+    {
+        return $this->requestWaybillDocument;
+    }
+
+    /**
      * @return $this
      */
     public function withCustomsInvoice()
@@ -304,10 +326,11 @@ class ShipmentInfo implements Arrayable
             'UnitOfMeasurement' => $this->getUnitOfMeasurement(),
             'LabelType' => $this->getLabelType(),
             'LabelOptions' => [
-                'RequestWaybillDocument' => 'Y',
+                'RequestWaybillDocument' => $this->getRequestWaybillDocument(),
                 'DetachOptions' => [
                     'AllInOnePDF' => 'Y',
                 ],
+                'HideAccountInWaybillDocument' => 'Y'
             ],
         ];
     }
@@ -326,12 +349,13 @@ class ShipmentInfo implements Arrayable
             'LabelType' => $this->getLabelType(),
             'CustomsInvoiceTemplate' => 'COMMERCIAL_INVOICE_03',
             'LabelOptions' => [
-                'RequestWaybillDocument' => 'Y',
+                'RequestWaybillDocument' => $this->getRequestWaybillDocument(),
                 'RequestDHLCustomsInvoice' => $this->getRequestDHLCustomsInvoice(),
                 'DHLCustomsInvoiceType' => 'PROFORMA_INVOICE',
                 'DetachOptions' => [
                     'AllInOnePDF' => 'Y',
                 ],
+                'HideAccountInWaybillDocument' => 'Y'
             ],
         ];
     }
