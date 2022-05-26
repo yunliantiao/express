@@ -144,10 +144,6 @@ abstract class Post
      */
     public function pinyin($v)
     {
-        if (is_null($this->pinyin)) {
-            $this->pinyin = new Pinyin();
-        }
-
         return $this->pinyin->sentence($v);
     }
 }
