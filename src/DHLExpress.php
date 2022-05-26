@@ -111,7 +111,7 @@ class DHLExpress extends Post
                 $dimension = new Dimensions();
                 $dimension->setHeight($box['height'])->setLength($box['length'])->setWidth($box['width']);
 
-                $package = $this->setPackage($dimension, $box, $data['vip_number'], $box['description'] == '' ? $cargoType : $box['description']);
+                $package = $this->setPackage($dimension, $box, $data['vip_number'], $data['shipment_content']);
                 $packages->add($package);
             }
         }
@@ -296,8 +296,8 @@ class DHLExpress extends Post
 
         $package->setNumber($data['number'])
             ->setDimensions($dimension)
-            ->setWeight($data['weight'])  //use g
-            ->setPackageContentDescription($description == "" ? 'Goods' : $description)
+            ->setWeight($data['weight'])
+            ->setPackageContentDescription($description == '' ? 'Goods' : $description)
             ->setCustomerReferences($reference);
 
         return $package;
