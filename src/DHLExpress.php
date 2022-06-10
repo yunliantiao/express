@@ -17,10 +17,12 @@ use Txtech\Express\Core\Log\Logger;
 use Txtech\Express\Posts\DHL\Common\Dimensions;
 use Txtech\Express\Posts\DHL\Common\Package;
 use Txtech\Express\Posts\DHL\Common\Packages;
+use Txtech\Express\Posts\DHL\Common\Pickup;
 use Txtech\Express\Posts\DHL\Common\Recipient;
 use Txtech\Express\Posts\DHL\Common\Ship;
 use Txtech\Express\Posts\DHL\Common\Shipper;
 use Txtech\Express\Posts\DHL\DHLRequest;
+use Txtech\Express\Posts\DHL\PickupRequest;
 use Txtech\Express\Posts\DHL\Shipment;
 use Txtech\Express\Posts\DHL\Shipment\ExportLineItem;
 use Txtech\Express\Posts\DHL\Shipment\InternationalDetail;
@@ -28,6 +30,7 @@ use Txtech\Express\Posts\DHL\Shipment\ShipmentInfo;
 use Txtech\Express\Posts\InvalidPostInfoException;
 use Txtech\Express\Posts\Post;
 use Txtech\Express\Posts\PostApiException;
+use Txtech\Express\Posts\DHL\Pickup\Package as PickupPackage;
 
 /**
  * Class DHLExpress
@@ -386,6 +389,97 @@ class DHLExpress extends Post
     }
 
     /**
+     * DHL 取件
+     *
+     * @param  array  $data
+     * @return array
+     * @throws \Exception
+     */
+    public function pickUp(array $data)
+    {
+        $shipmentInfo = (new Posts\DHL\Pickup\ShipmentInfo())->setShipperAccountNumber($this->accountCode);
+
+        $pickUp = $this->setPickup($data);
+
+        $shipper = $this->setShipper($data, false);
+
+        $packages = new Packages();
+
+        if($data['items']) {
+            foreach ($data['items'] as $key => $value) {
+
+                $dimension = new Dimensions();
+
+                $dimension->setHeight($value['height_size'] ) //use mm
+                ->setLength($value['length_size'])
+                    ->setWidth($value['width_size']);
+
+                $package = new PickupPackage();
+
+                $package->setNumber($value["qty"])
+                    ->setDimensions($dimension)
+                    ->setWeight((int) $value["weight"])  //use g
+                    ->setCustomerReferences($value["remark"]);
+
+                $packages->add($package);
+            }
+        } else {
+            throw new \Exception("缺少包裹明细", 1);
+        }
+
+        $ship = new Ship();
+
+        $pickUp = (new PickUpRequest())
+            ->setShipmentInfo($shipmentInfo)
+            ->setPackages($packages)
+            ->setPickupTimestamp(gmdate('Y-m-d\TH:i:s \G\M\TP', strtotime($data['pickup_date'])))
+            ->setPickupLocationCloseTime($data['pickup_location_close_time'] ?? '') //截止时间，eg： 15:00
+            ->setShip($ship->setShipper($shipper)->setPickUp($pickUp))
+            ->toArray();
+
+        $this->toArray($pickUp);
+
+        try {
+            $data = (new DHLRequest($this->apiInfo))->pickUpRequest($pickUp);
+
+            $response = $data['PickUpResponse'];
+
+            if ($response['Notification'][0]['@code'] != 0) {
+                throw new InvalidPostInfoException((json_encode($response)));
+            }
+
+            return $response;
+        } catch (PostApiException|InvalidPostInfoException $ex) {
+            Logger::printScreen(LogLevel::ERROR, 'DHL预约对接失败', $ex->getMessage());
+            throw new PostApiException($ex->getMessage());
+        }
+    }
+
+    /**
+     * 设置取件信息
+     *
+     * @param $data
+     * @return Pickup
+     */
+    protected function setPickup($data): Pickup
+    {
+        $pickup = new Pickup();
+
+        $pickup->setName($data['pickup_name'])
+            ->setEmail($data['email_address'])
+            ->setCompanyName($data['pickup_company'] ?? '')
+            ->setPhoneNumber($data['pickup_tel'])
+            ->setCity($data['pickup_province'] . ' ' . $data['pickup_city'])
+            ->setStreet($data['pickup_address'])
+            ->setStreet2($data['pickup_address2'] ?? ' ')
+            ->setStreet3($data['pickup_address3'] ?? ' ')
+            ->setPostCode($data['pickup_postcode'])
+            ->setCountryCode($data['pickup_country_code']);
+
+        return $pickup;
+    }
+
+    /**
      * @param array $data
      * @return void
      */
@@ -399,5 +493,4 @@ class DHLExpress extends Post
             }
         }
     }
-
 }

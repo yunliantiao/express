@@ -68,6 +68,32 @@ class DHLRequest
 
         $this->endPoint = '/ShipmentRequest';
 
+        return $this->request($body);
+    }
+
+    /**
+     * @param array $body
+     * @return mixed
+     * @throws PostApiException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function pickUpRequest(array $body)
+    {
+        Logger::printScreen(LogLevel::INFO, 'DHL预约对接数据', $body);
+
+        $this->endPoint = '/PickupRequest';
+
+        return $this->request($body);
+    }
+
+    /**
+     * @param array $body
+     * @return mixed
+     * @throws PostApiException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function request(array $body)
+    {
         try {
             $response = $this->client->doRequest(new Request(
                 'POST',
@@ -81,11 +107,11 @@ class DHLRequest
             } else {
                 throw new PostApiException($response->getBody());
             }
+
         } catch (HttpClientException $e) {
             throw new PostApiException($e->getMessage());
         }
     }
-
 
     /**
      * @return string[]
