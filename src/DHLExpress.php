@@ -439,6 +439,8 @@ class DHLExpress extends Post
 
         $this->toArray($pickUp);
 
+        Logger::saveFile(LogLevel::INFO, "pickup {$data['items'][0]['remark']}: ", $pickUp);
+
         try {
             $data = (new DHLRequest($this->apiInfo))->pickUpRequest($pickUp);
 
