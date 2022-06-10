@@ -45,7 +45,7 @@ class Shipper implements ArrayAble
     protected string $numberTypeCode = 'VAT';
 
     /** @var mixed */
-    protected mixed $registrationNumber;
+    protected mixed $registrationNumber = '';
 
     /** @var mixed */
     protected mixed $city;

@@ -416,10 +416,10 @@ class DHLExpress extends Post
 
                 $package = new PickupPackage();
 
-                $package->setNumber($value["qty"])
+                $package->setNumber($value['qty'])
                     ->setDimensions($dimension)
-                    ->setWeight((int) $value["weight"])  //use g
-                    ->setCustomerReferences($value["remark"]);
+                    ->setWeight((int) $value['weight'])  //use g
+                    ->setCustomerReferences($value['remark']);
 
                 $packages->add($package);
             }
@@ -471,8 +471,8 @@ class DHLExpress extends Post
             ->setPhoneNumber($data['pickup_tel'])
             ->setCity($data['pickup_province'] . ' ' . $data['pickup_city'])
             ->setStreet($data['pickup_address'])
-            ->setStreet2($data['pickup_address2'] ?? ' ')
-            ->setStreet3($data['pickup_address3'] ?? ' ')
+//            ->setStreet2($data['pickup_address2'] ?? ' ')
+//            ->setStreet3($data['pickup_address3'] ?? ' ')
             ->setPostCode($data['pickup_postcode'])
             ->setCountryCode($data['pickup_country_code']);
 
