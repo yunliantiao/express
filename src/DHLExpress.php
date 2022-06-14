@@ -398,6 +398,7 @@ class DHLExpress extends Post
      */
     public function pickUp(array $data)
     {
+        $pickUpNumber = $data['items'][0]['remark'];
         $shipmentInfo = (new Posts\DHL\Pickup\ShipmentInfo())->setShipperAccountNumber($this->accountCode);
 
         $pickUp = $this->setPickup($data);
@@ -440,14 +441,14 @@ class DHLExpress extends Post
 
         $this->toArray($pickUp);
 
-        Logger::saveFile(LogLevel::INFO, "create pickup {$data['items'][0]['remark']} request : ", $pickUp);
+        Logger::saveFile(LogLevel::INFO, "create pickup $pickUpNumber request : ", $pickUp);
 
         try {
             $data = (new DHLRequest($this->apiInfo))->pickUpRequest($pickUp);
 
             $response = $data['PickUpResponse'];
 
-            Logger::saveFile(LogLevel::INFO, "create pickup {$data['items'][0]['remark']} response : ", $response);
+            Logger::saveFile(LogLevel::INFO, "create pickup $pickUpNumber response : ", $response);
 
             return $response;
         } catch (PostApiException $ex) {
