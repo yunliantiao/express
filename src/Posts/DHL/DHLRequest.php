@@ -79,9 +79,24 @@ class DHLRequest
      */
     public function pickUpRequest(array $body)
     {
-        Logger::printScreen(LogLevel::INFO, 'DHL预约对接数据', $body);
+        Logger::printScreen(LogLevel::INFO, 'DHL发起预约对接数据', $body);
 
         $this->endPoint = '/PickupRequest';
+
+        return $this->request($body);
+    }
+
+    /**
+     * @param array $body
+     * @return mixed
+     * @throws PostApiException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function deletePickupRequest(array $body)
+    {
+        Logger::printScreen(LogLevel::INFO, 'DHL取消预约对接数据', $body);
+
+        $this->endPoint = '/DeleteRequest';
 
         return $this->request($body);
     }

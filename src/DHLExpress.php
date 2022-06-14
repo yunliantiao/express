@@ -21,6 +21,7 @@ use Txtech\Express\Posts\DHL\Common\Pickup;
 use Txtech\Express\Posts\DHL\Common\Recipient;
 use Txtech\Express\Posts\DHL\Common\Ship;
 use Txtech\Express\Posts\DHL\Common\Shipper;
+use Txtech\Express\Posts\DHL\DeleteRequest;
 use Txtech\Express\Posts\DHL\DHLRequest;
 use Txtech\Express\Posts\DHL\PickupRequest;
 use Txtech\Express\Posts\DHL\Shipment;
@@ -393,7 +394,7 @@ class DHLExpress extends Post
      *
      * @param  array  $data
      * @return array
-     * @throws \Exception
+     * @throws \Exception|\GuzzleHttp\Exception\GuzzleException
      */
     public function pickUp(array $data)
     {
@@ -445,6 +446,42 @@ class DHLExpress extends Post
             $data = (new DHLRequest($this->apiInfo))->pickUpRequest($pickUp);
 
             $response = $data['PickUpResponse'];
+
+            if ($response['Notification'][0]['@code'] != 0) {
+                throw new InvalidPostInfoException((json_encode($response)));
+            }
+
+            return $response;
+        } catch (PostApiException|InvalidPostInfoException $ex) {
+            Logger::printScreen(LogLevel::ERROR, 'DHL预约对接失败', $ex->getMessage());
+            throw new PostApiException($ex->getMessage());
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return mixed
+     * @throws PostApiException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function cancelPickup(array $data)
+    {
+        $deleteRequest = (new DeleteRequest())
+            ->setPickupDate($data['pick_date'])
+            ->setPickupCountry($data['pick_country'])
+            ->setDispatchConfirmationNumber($data['dispatch_confirmation_number'])
+            ->setRequestorName($data['requestor_name'])
+            ->setReason($data['reason'])
+            ->toArray();
+
+        $this->toArray($deleteRequest);
+
+        Logger::saveFile(LogLevel::INFO, "cancel pickup {$data['pick_number']}: ", $deleteRequest);
+
+        try {
+            $data = (new DHLRequest($this->apiInfo))->deletePickupRequest($deleteRequest);
+
+            $response = $data['DeleteResponse'];
 
             if ($response['Notification'][0]['@code'] != 0) {
                 throw new InvalidPostInfoException((json_encode($response)));
