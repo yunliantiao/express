@@ -11,6 +11,7 @@
 
 namespace Txtech\Express\Posts\DHL;
 
+use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
 use Psr\Log\LogLevel;
 use Txtech\Express\Core\HttpClient\HttpClient;
@@ -117,13 +118,8 @@ class DHLRequest
                 json_encode($body)
             ));
 
-            if ($response->getStatusCode() === 200) {
-                return json_decode($response->getBody(), true);
-            } else {
-                throw new PostApiException($response->getBody());
-            }
-
-        } catch (HttpClientException $e) {
+            return json_decode($response->getBody(), true);
+        } catch (BadResponseException|\Exception $e) {
             throw new PostApiException($e->getMessage());
         }
     }

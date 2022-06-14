@@ -215,7 +215,7 @@ class DHLExpress extends Post
             }
 
             return $this->updateManyNumbers($globalBarcodes, $pdfContent);
-        } catch (PostApiException|InvalidPostInfoException $ex) {
+        } catch (PostApiException $ex) {
             Logger::printScreen(LogLevel::ERROR, 'DHL面单对接失败', $ex->getMessage());
             throw new PostApiException($ex->getMessage());
         }
@@ -440,20 +440,18 @@ class DHLExpress extends Post
 
         $this->toArray($pickUp);
 
-        Logger::saveFile(LogLevel::INFO, "pickup {$data['items'][0]['remark']}: ", $pickUp);
+        Logger::saveFile(LogLevel::INFO, "create pickup {$data['items'][0]['remark']} request : ", $pickUp);
 
         try {
             $data = (new DHLRequest($this->apiInfo))->pickUpRequest($pickUp);
 
             $response = $data['PickUpResponse'];
 
-            if ($response['Notification'][0]['@code'] != 0) {
-                throw new InvalidPostInfoException((json_encode($response)));
-            }
+            Logger::saveFile(LogLevel::INFO, "create pickup {$data['items'][0]['remark']} response : ", $response);
 
             return $response;
-        } catch (PostApiException|InvalidPostInfoException $ex) {
-            Logger::printScreen(LogLevel::ERROR, 'DHL预约对接失败', $ex->getMessage());
+        } catch (PostApiException $ex) {
+            Logger::printScreen(LogLevel::ERROR, 'DHL发起预约对接失败', $ex->getMessage());
             throw new PostApiException($ex->getMessage());
         }
     }
@@ -476,20 +474,18 @@ class DHLExpress extends Post
 
         $this->toArray($deleteRequest);
 
-        Logger::saveFile(LogLevel::INFO, "cancel pickup {$data['pick_number']}: ", $deleteRequest);
+        Logger::saveFile(LogLevel::INFO, "cancel pickup {$data['pick_number']} request : ", $deleteRequest);
 
         try {
             $data = (new DHLRequest($this->apiInfo))->deletePickupRequest($deleteRequest);
 
             $response = $data['DeleteResponse'];
 
-            if ($response['Notification'][0]['@code'] != 0) {
-                throw new InvalidPostInfoException((json_encode($response)));
-            }
+            Logger::saveFile(LogLevel::INFO, "cancel pickup {$data['pick_number']} response : ", $response);
 
             return $response;
-        } catch (PostApiException|InvalidPostInfoException $ex) {
-            Logger::printScreen(LogLevel::ERROR, 'DHL预约对接失败', $ex->getMessage());
+        } catch (PostApiException $ex) {
+            Logger::printScreen(LogLevel::ERROR, 'DHL取消预约对接失败', $ex->getMessage());
             throw new PostApiException($ex->getMessage());
         }
     }
