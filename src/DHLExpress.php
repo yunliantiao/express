@@ -465,6 +465,8 @@ class DHLExpress extends Post
      */
     public function cancelPickup(array $data)
     {
+        $pickUpNumber = $data['pick_number'];
+
         $deleteRequest = (new DeleteRequest())
             ->setPickupDate($data['pick_date'])
             ->setPickupCountry($data['pick_country'])
@@ -475,14 +477,14 @@ class DHLExpress extends Post
 
         $this->toArray($deleteRequest);
 
-        Logger::saveFile(LogLevel::INFO, "cancel pickup {$data['pick_number']} request : ", $deleteRequest);
+        Logger::saveFile(LogLevel::INFO, "cancel pickup {$pickUpNumber} request : ", $deleteRequest);
 
         try {
             $data = (new DHLRequest($this->apiInfo))->deletePickupRequest($deleteRequest);
 
             $response = $data['DeleteResponse'];
 
-            Logger::saveFile(LogLevel::INFO, "cancel pickup {$data['pick_number']} response : ", $response);
+            Logger::saveFile(LogLevel::INFO, "cancel pickup {$pickUpNumber} response : ", $response);
 
             return $response;
         } catch (PostApiException $ex) {

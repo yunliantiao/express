@@ -97,7 +97,7 @@ class DHLRequest
     {
         Logger::printScreen(LogLevel::INFO, 'DHL取消预约对接数据', $body);
 
-        $this->endPoint = '/DeleteRequest';
+        $this->endPoint = '/DeleteShipment';
 
         return $this->request($body);
     }
