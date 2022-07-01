@@ -129,7 +129,7 @@ class DHLExpress extends Post
             $exportItem->setItemNumber(1)
                 ->setUnitPrice($data['total_price'])
                 ->setItemDescription($cargoType)
-                ->setQuantityUnitOfMeasurement('weight_unit')
+                ->setQuantityUnitOfMeasurement($data['weight_unit'])
                 ->setGrossWeight(number_format(ceil($data['total_value']), 2))
                 ->setNetWeight(number_format(ceil($data['total_value']), 2))
                 ->setQuantity(1);
