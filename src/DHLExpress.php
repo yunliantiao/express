@@ -139,7 +139,7 @@ class DHLExpress extends Post
             foreach ($data['declares'] as $declare) {
                 $exportItem = new ExportLineItem();
                 $exportItem->setItemNumber($declare['number'] ?? $declare['id'])
-                    ->setUnitPrice(number_format($declare['price'], 2, ',', '.'))
+                    ->setUnitPrice(round($declare['price']), 2)
                     ->setItemDescription($declare['description'])
                     ->setQuantityUnitOfMeasurement('KG')
                     ->setGrossWeight($declare['total_weight'])
