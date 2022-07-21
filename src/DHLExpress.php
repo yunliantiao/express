@@ -398,7 +398,7 @@ class DHLExpress extends Post
      */
     public function pickUp(array $data)
     {
-        $pickUpNumber = $data['items'][0]['remark'];
+        $pickUpNumber = $data['pickup_number'];
         $shipmentInfo = (new Posts\DHL\Pickup\ShipmentInfo())->setShipperAccountNumber($this->accountCode);
 
         $pickUp = $this->setPickup($data);
